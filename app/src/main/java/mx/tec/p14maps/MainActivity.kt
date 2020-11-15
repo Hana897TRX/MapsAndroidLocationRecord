@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity(), LocationListener, LoadData.OnDataLoade
             })
 
         val alert = dialogBuilder.create()
-        alert.setTitle(R.string.delete_db_title)
+        alert.setTitle(R.string.clear_map_title)
         alert.show()
     }
 

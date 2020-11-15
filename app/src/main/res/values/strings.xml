@@ -31,6 +31,7 @@
 
     <string name="clear_map">Do you want to clear map points? Stored points will not deleted.</string>
     <string name="clear_map_confirmation">Map cleared.</string>
+    <string name="clear_map_title">Clear map points?</string>
 
     <!--MENU-->
 
