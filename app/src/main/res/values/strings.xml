@@ -1,0 +1,37 @@
+<resources>
+
+    <!--NO CATEGORY OR GLOBAL STRINGS-->
+    <string name="app_name">p14Maps</string>
+    <string name="permission_needed">Permission Needed</string>
+    <string name="accept">Aceptar</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+
+    <!--PERMISSIONS-->
+    <string name="location_needed">GPS is necessary to use integrated map in this application.</string>
+
+    <!--MAIN ACTIVITY-->
+    <string name="points_loaded">All points were loaded.</string>
+    <string name="no_points_stored">No points stored</string>
+
+    <string name="stop_record">Do you want to stop location record?</string>
+    <string name="stop_record_title">Stop record?</string>
+    <string name="stop_record_confirmation">Location record was disabled.</string>
+
+    <string name="enable_record">Do you want to enable location record?. All positions will save into DB</string>
+    <string name="enable_record_title">Enable record?</string>
+    <string name="enable_record_confirmation">Location record was enabled.</string>
+
+    <string name="load_points">Do you want to load all saved points and load them into the map?</string>
+    <string name="load_points_title">Load Saved Points?</string>
+
+    <string name="delete_db">Delete all points saved?</string>
+    <string name="delete_db_title">Delete DB Points?</string>
+    <string name="erased_confirmation">DB erased</string>
+
+    <string name="clear_map">Do you want to clear map points? Stored points will not deleted.</string>
+    <string name="clear_map_confirmation">Map cleared.</string>
+
+    <!--MENU-->
+
+</resources>
