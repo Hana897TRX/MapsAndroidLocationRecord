@@ -16,16 +16,19 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mx.tec.p14maps.DB.AppDB
-import mx.tec.p14maps.DB.AccessMethods.LoadData
 import mx.tec.p14maps.DB.model.LocationModel
 
-class MainActivity : AppCompatActivity(), LocationListener, LoadData.OnDataLoaded {
+class MainActivity : AppCompatActivity(), LocationListener {
     private lateinit var locationManager : LocationManager
     private lateinit var mapa: GoogleMap
     private var saveDB = false
@@ -112,8 +115,23 @@ class MainActivity : AppCompatActivity(), LocationListener, LoadData.OnDataLoade
             .setCancelable(false)
             .setPositiveButton(R.string.yes) { dialogInterface, which ->
 
-                var loadData = LoadData(this@MainActivity)
-                loadData.execute()
+                lifecycleScope.launch (Dispatchers.IO) {
+                    var db = AppDB.getInstance(this@MainActivity)
+                    var data = db.locationDao().getLocations()
+
+                    // SHOW DATA UI
+                    withContext(Dispatchers.Main) {
+                        if (data != null && data.size > 0) {
+                            for (locat in data)
+                                mapa.addMarker(MarkerOptions().position(LatLng(locat.latitude, locat.longitude)))
+                            Toast.makeText(this@MainActivity, R.string.points_loaded, Toast.LENGTH_SHORT)
+                                    .show()
+                        } else
+                            Toast.makeText(this@MainActivity, R.string.points_loaded, Toast.LENGTH_SHORT)
+//                          .show()
+                    }
+
+                }
             }
             .setNegativeButton(R.string.cancel, DialogInterface.OnClickListener {
                     dialog, id -> dialog.cancel()
@@ -132,10 +150,10 @@ class MainActivity : AppCompatActivity(), LocationListener, LoadData.OnDataLoade
             .setPositiveButton(R.string.yes) { dialogInterface, which ->
 
                 //  DELETE DB
-                Thread{
-                    val db = AppDB.getInstance(this)
+                lifecycleScope.launch(Dispatchers.IO){
+                    val db = AppDB.getInstance(this@MainActivity)
                     db.locationDao().deleteLocations()
-                }.start()
+                }
 
                 // Message to User
                 Toast.makeText(this, R.string.erased_confirmation, Toast.LENGTH_SHORT)
@@ -181,10 +199,10 @@ class MainActivity : AppCompatActivity(), LocationListener, LoadData.OnDataLoade
     }
 
     private fun registerLocation(location : LocationModel){
-        Thread{
-            val db = AppDB.getInstance(this)
+        lifecycleScope.launch(Dispatchers.IO){
+            val db = AppDB.getInstance(this@MainActivity)
             db.locationDao().insertLocation(location)
-        }.start()
+        }
     }
 
     override fun onLocationChanged(location: Location) {
@@ -224,7 +242,16 @@ class MainActivity : AppCompatActivity(), LocationListener, LoadData.OnDataLoade
         when(requestCode){
             10 -> {
                 if(grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                    val dialogBuilder = androidx.appcompat.app.AlertDialog.Builder(this)
+                    dialogBuilder.setMessage(R.string.permissions_not_granted)
+                            .setCancelable(false)
+                            .setNegativeButton(R.string.exit, DialogInterface.OnClickListener {
+                                dialog, id -> finish()
 
+                            })
+                    val alert = dialogBuilder.create()
+                    alert.setTitle(R.string.exit)
+                    alert.show()
                 }
                 else{
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this@MainActivity)
@@ -233,16 +260,4 @@ class MainActivity : AppCompatActivity(), LocationListener, LoadData.OnDataLoade
         }
     }
 
-    override fun onDataLoaded(data: List<LocationModel>) {
-        if(data != null && data.size > 0){
-            for(locat in data)
-                mapa.addMarker(MarkerOptions().position(LatLng(locat.latitude, locat.longitude)))
-
-            Toast.makeText(this, R.string.points_loaded, Toast.LENGTH_SHORT)
-                .show()
-        }
-        else
-            Toast.makeText(this, R.string.no_points_stored, Toast.LENGTH_SHORT)
-                .show()
-    }
 }

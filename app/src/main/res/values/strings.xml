@@ -6,9 +6,11 @@
     <string name="accept">Aceptar</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="exit">Exit</string>
 
     <!--PERMISSIONS-->
     <string name="location_needed">GPS is necessary to use integrated map in this application.</string>
+    <string name="permissions_not_granted">This application will unable to use without location permission</string>
 
     <!--MAIN ACTIVITY-->
     <string name="points_loaded">All points were loaded.</string>

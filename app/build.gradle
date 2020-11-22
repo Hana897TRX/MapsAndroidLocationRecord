@@ -46,11 +46,16 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // Navigation Bar
+    implementation 'com.google.android.material:material:1.2.1'
+
     // MAPS
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     // ROOM DB
-    implementation 'com.google.android.material:material:1.2.1'
     kapt 'androidx.room:room-compiler:2.3.0-alpha03'
     implementation 'androidx.room:room-runtime:2.3.0-alpha03'
+
+    //LifeCycle
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
 }
